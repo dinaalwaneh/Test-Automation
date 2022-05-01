@@ -11,7 +11,17 @@ describe('SkillMatch Test', () => {
     //and login functionality work automaticly :
     cy.visit('https://skillsmatch.mdx.ac.uk/accounts/login/?next=/en/')
       
-   //eleen
+    const userName = 'blabla'
+    const passWord = '123123'
+    //enter userName > 'blabla' in username input :
+    cy.get('[id=username]').type(userName)
+
+    //enter passWord > '123123' in passWord input :
+    cy.get('[id=password]').type(passWord)
+    //get login button element and click on it:
+    cy.get('[value=Login]').click()
+
+ 
     
   })
 
@@ -303,7 +313,121 @@ describe('SkillMatch Test', () => {
   
 
 
-//eleen
+
+    it('Verify updating my skills page and profile', ()=>{
+          //this code is for test case of updating my skills feature -happy senario-.
+          //first we fisit the link of profile page.
+            cy.visit('https://skillsmatch.mdx.ac.uk/en/profile/')
+          
+          //click these btns to go to the update my skills section to start the test.
+          //here we get the elements by 'test-data' feature, and click the btns by the click() method.
+            cy.get('[test-data=UpdateMySkills]').click()
+            cy.get('[test-data=StartUpdatingMySkills]').click()
+          
+          //start input data by select one choice of each question.
+        
+          //first question about level of competence, here we choose the choice with id=3 and here answers are without values.
+            cy.get('[id=3]').check().should('be.checked')
+          //then we click btn to go to next section -area1-.
+            cy.get('[test-data=NextStep]').click()
+
+
+          //set values of 3 to all answers of area1 section.
+            cy.get('[id=12]').check().should('be.checked')
+            cy.get('[id=17]').check().should('be.checked')
+            cy.get('[id=22]').check().should('be.checked')
+            cy.get('[id=27]').check().should('be.checked')
+        
+        //the total score of area1 should be 12/16
+            let score_1= "(12/16)"
+        //the star score should be 4 out of 5, which is approximated from 3.75
+            let stars_1= Math.ceil(5*12/16)
+        //click next btn to go to area 2, because the cy.get('.next') return list of elements which have class next we use eq(index) to get the right element.
+            cy.get('.next').eq(1).click()
+
+        //the code will be duplicated himself because it is the same processes from here:
+        
+        //area 2
+            cy.get('[id=32]').check().should('be.checked')
+            cy.get('[id=37]').check().should('be.checked')
+            cy.get('[id=42]').check().should('be.checked')
+            let score_2= "(9/12)"
+            let stars_2= Math.ceil(5*9/12)
+            cy.get('.next').eq(2).click()
+
+        //area 3
+            cy.get('[id=47]').check().should('be.checked')
+            cy.get('[id=52]').check().should('be.checked')
+            cy.get('[id=57]').check().should('be.checked')
+            cy.get('[id=62]').check().should('be.checked')
+            let score_3= "(12/16)"
+            let stars_3= Math.ceil(5*12/16)
+            cy.get('.next').eq(3).click()
+                  
+        //area 4
+            cy.get('[id=67]').check().should('be.checked')
+            cy.get('[id=72]').check().should('be.checked')
+            cy.get('[id=77]').check().should('be.checked')
+            let score_4= "(9/12)"
+            let stars_4= Math.ceil(5*9/12)
+            cy.get('.next').eq(4).click()
+        
+        //area 5
+                  
+            cy.get('[id=82]').check().should('be.checked')
+            cy.get('[id=87]').check().should('be.checked')
+            cy.get('[id=92]').check().should('be.checked')
+            let score_5= "(9/12)"
+            let stars_5= Math.ceil(5*9/12)
+            cy.get('.next').eq(5).click()
+        
+        //area 6
+
+            cy.get('[id=97]').check().should('be.checked')
+            cy.get('[id=102]').check().should('be.checked')
+            cy.get('[id=107]').check().should('be.checked')
+            cy.get('[id=112]').check().should('be.checked')
+            cy.get('[id=117]').check().should('be.checked')
+            let score_6= "(15/20)"
+            let stars_6= Math.ceil(5*15/20)
+            cy.get('.next').eq(6).click()
+        //to here
+          
+        //here the final step of inserting data (choosing answers), which is without values.
+           cy.get('[id=120]').check().should('be.checked')
+           cy.get('[id=122]').check().should('be.checked')
+           cy.get('[id=131]').check().should('be.checked')
+           cy.get('.next').eq(7).click()
+      
+        
+          
+        //function to get throw spaces and other unneeded from string wich represent the score of area in profile page.
+          function formatString(text) {
+              return text.replace('kr', '').replace('\u00A0','').trim();
+          }
+        
+       //here we test the value of scores of each area of the score shown in profile page of the area.
+        
+          cy.get('[test-data=area_1_Scor]').invoke("text").then(formatString).should("eq", score_1)   //area 1
+          cy.get('[test-data=area_2_Scor]').invoke("text").then(formatString).should("eq", score_2)   //area 2
+          cy.get('[test-data=area_3_Scor]').invoke("text").then(formatString).should("eq", score_3)   //area 3
+          cy.get('[test-data=area_4_Scor]').invoke("text").then(formatString).should("eq", score_4)   //area 4
+          cy.get('[test-data=area_5_Scor]').invoke("text").then(formatString).should("eq", score_5)   //area 5
+          cy.get('[test-data=area_6_Scor]').invoke("text").then(formatString).should("eq", score_6)   //area 6
+          
+          
+        //here we test the stars number of each area to what should be.
+          cy.get('[test-data=area_1_myscore]>[test-data=filledStar]').its('length').should('eq', stars_1)  //area 1
+          cy.get('[test-data=area_2_myscore]>[test-data=filledStar]').its('length').should('eq', stars_2)  //area 2
+          cy.get('[test-data=area_3_myscore]>[test-data=filledStar]').its('length').should('eq', stars_3)  //area 3
+          cy.get('[test-data=area_4_myscore]>[test-data=filledStar]').its('length').should('eq', stars_4)  //area 4
+          cy.get('[test-data=area_5_myscore]>[test-data=filledStar]').its('length').should('eq', stars_5)  //area 5
+          cy.get('[test-data=area_6_myscore]>[test-data=filledStar]').its('length').should('eq', stars_6)  //area 6
+        
+        //test case finished.
+
+      })
+
 
 })
 
